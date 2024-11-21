@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'Louis George Cafe';
+    src: url('LouisGeorgeCafe-Italic.woff2') format('woff2'),
+        url('LouisGeorgeCafe-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Louis George Cafe';
+    src: url('LouisGeorgeCafe-Bold.woff2') format('woff2'),
+        url('LouisGeorgeCafe-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Louis George Cafe';
+    src: url('LouisGeorgeCafe-BoldItalic.woff2') format('woff2'),
+        url('LouisGeorgeCafe-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Louis George Cafe';
+    src: url('LouisGeorgeCafeLight-Italic.woff2') format('woff2'),
+        url('LouisGeorgeCafeLight-Italic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Louis George Cafe';
+    src: url('LouisGeorgeCafeLight.woff2') format('woff2'),
+        url('LouisGeorgeCafeLight.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Louis George Cafe';
+    src: url('LouisGeorgeCafe.woff2') format('woff2'),
+        url('LouisGeorgeCafe.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
