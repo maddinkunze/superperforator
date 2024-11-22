@@ -822,6 +822,10 @@ class Speed extends EntryWithUnit {
   constructor(group, title, value) {
     super(group, title, value, VELOCITY_UNITS);
   }
+
+  to_mms() {
+    return VELOCITY_UNITS[this.unit].to_mms(this.value);
+  }
 }
 
 class Rotation extends EntryWithUnit {

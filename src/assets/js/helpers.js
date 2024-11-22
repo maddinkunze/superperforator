@@ -62,3 +62,7 @@ function reset_canvas(ctx) {
 function clamp(min, v, max) {
   return Math.min(Math.max(v, min), max);
 }
+
+function dpi_to_ppmm(dpi) {
+  return dpi / LENGTH_UNITS_ABS.in.mm_per_unit;
+}

@@ -16,6 +16,16 @@ body {
   background: linear-gradient(167deg, rgba(237,226,226,1) 0%, rgba(226,226,237,1) 100%); 
 }
 
+#render-container {
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0.01;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+}
+
 #preview-container,
 #settings-container {
   height: 100%;

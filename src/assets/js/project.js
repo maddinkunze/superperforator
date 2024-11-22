@@ -13,21 +13,39 @@ class Project extends BaseProject {
 
   static SETTINGS_MAP = ["project", "machine", "paper", "objects", "display", "output"];
 
-  canvas_render_front = document.createElement("canvas");
-  canvas_render_back = document.createElement("canvas");
-  canvas_preview_front = document.getElementById("preview-canvas-front");
+  canvas_render_back = document.getElementById("render-canvas-back");
+  canvas_render_front = document.getElementById("render-canvas-front");
+  output_perforation_front = "";
   canvas_preview_back = document.getElementById("preview-canvas-back");
+  canvas_preview_front = document.getElementById("preview-canvas-front");
 
   get_filename() {
     return this.project.name.value + PROJECT_FILE_EXTENSION;
   }
 
-  export() {
-    console.log("TODO: export project", this);
+  async export() {
+    var [width, height] = this.paper.calc_size();
+    const ppmm = dpi_to_ppmm(parseFloat(this.output.quality.value))
+    width = Math.round(ppmm * width);
+    height = Math.round(ppmm * height);
+    this.canvas_render_back.width = width;
+    this.canvas_render_back.height = height;
+    this.canvas_render_front.width = width;
+    this.canvas_render_front.height = height;
+
+    await this.draw(false);
+    
+    saveAs(this.canvas_render_back.toDataURL("image/png"), "back.png");
+    saveAs(this.canvas_render_front.toDataURL("image/png"), "front.png");
+    saveAs(new Blob([this.output_perforation_front]), "laser.gcode");
   }
 
   update_constraints() {
     this.draw(true);
+  }
+
+  get_machine_writer() {
+    return new GCodeWriterLaser(this.machine.power.value, this.machine.feedrate_cut.to_mms(), this.machine.feedrate_travel.to_mms());
   }
 
   async draw(preview) {
@@ -41,7 +59,9 @@ class Project extends BaseProject {
       this.paper.width_bridge.to_mm(),
       this.paper.width_perf_cut.to_mm(),
       this.paper.width_perf_material.to_mm(),
-      new CanvasLineWriter(context_front, parseFloat(this.display.line_width.value), this.display.line_color.value),
+      preview
+        ? new CanvasLineWriter(context_front, parseFloat(this.display.line_width.value), this.display.line_color.value)
+        : this.get_machine_writer(),
     );
     
     const [width_mm, height_mm] = this.paper.calc_size();
@@ -80,7 +100,7 @@ class Project extends BaseProject {
     //  - render: definitely
     //  - preview: only if there are "holes" in the front; i.e. "Hide Cutouts" option is set
     const hide_cutouts = this.display.hide_cutouts.checked;
-    const draw_back = !preview || hide_cutouts; // TODO: checkbox
+    const draw_back = !preview || hide_cutouts;
     perforator_front.start();
     for (var i=0; i<this.objects.objects.length; i++) {
       const obj = this.objects.objects[i];
@@ -100,6 +120,10 @@ class Project extends BaseProject {
         obj.perforate_front(cutter_front);
       }
       cutter_front.stop();
+    }
+
+    if (!preview) {
+      this.output_perforation_front = perforator_front.stop();
     }
 
     loadingScreen.hide();
