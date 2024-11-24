@@ -24,20 +24,28 @@ class Project extends BaseProject {
   }
 
   async export() {
-    var [width, height] = this.paper.calc_size();
+    loading_screen.show();
+    loading_screen.set_text("Preparing...");
+    const [width_mm, height_mm] = this.paper.calc_size();
     const ppmm = dpi_to_ppmm(parseFloat(this.output.quality.value))
-    width = Math.round(ppmm * width);
-    height = Math.round(ppmm * height);
-    this.canvas_render_back.width = width;
-    this.canvas_render_back.height = height;
-    this.canvas_render_front.width = width;
-    this.canvas_render_front.height = height;
+    const width_px = Math.round(ppmm * width_mm);
+    const height_px = Math.round(ppmm * height_mm);
+    this.canvas_render_back.width = width_px;
+    this.canvas_render_back.height = height_px;
+    this.canvas_render_front.width = width_px;
+    this.canvas_render_front.height = height_px;
 
+    loading_screen.set_text("Drawing with high resolution...");
     await this.draw(false);
     
-    saveAs(this.canvas_render_back.toDataURL("image/png"), "back.png");
-    saveAs(this.canvas_render_front.toDataURL("image/png"), "front.png");
+    loading_screen.set_text("Exporting files...");
+    const pdf = new jspdf.jsPDF({unit: "mm", format: [width_mm, 2*height_mm]});
+    pdf.addImage(this.canvas_render_front.toDataURL("image/png"), "PNG", 0, 0, width_mm, height_mm, null, "FAST", 0);
+    pdf.addPage([width_mm, 2*height_mm]);
+    pdf.addImage(this.canvas_render_back.toDataURL("image/png"), "PNG", width_mm, 0, width_mm, height_mm, null, "FAST", 180);
+    pdf.save("print.pdf");
     saveAs(new Blob([this.output_perforation_front]), "laser.gcode");
+    loading_screen.hide();
   }
 
   update_constraints() {
@@ -49,7 +57,7 @@ class Project extends BaseProject {
   }
 
   async draw(preview) {
-    loadingScreen.show();
+    loading_screen.show();
     const canvas_back = preview ? this.canvas_preview_back : this.canvas_render_back;
     const canvas_front = preview ? this.canvas_preview_front : this.canvas_render_front;
     const context_back = canvas_back.getContext("2d");
@@ -126,7 +134,7 @@ class Project extends BaseProject {
       this.output_perforation_front = perforator_front.stop();
     }
 
-    loadingScreen.hide();
+    loading_screen.hide();
 
     context_back.restore();
     context_front.restore();
@@ -266,9 +274,19 @@ class ObjectItem extends SettingsListItem {
     this._label_element = this._add_text("");
 
     const _this = this;
-    this.html_element.addEventListener("click", function(e) { _this.project._object.toggle_object(_this); _this.html_element.classList.toggle("selected") });
+    this.html_element.addEventListener("click", function(e) { e.ctrlKey ? _this.toggle_object() : _this.select_object(); });
     this.init_settings();
     this.update_constraints();
+  }
+
+  select_object() {
+    this.project._object.set_object(this);
+    this.list.update_selected_items();
+  }
+
+  toggle_object() {
+    this.project._object.toggle_object(this);
+    this.list.update_selected_items();
   }
 
   init_settings() {
@@ -435,6 +453,15 @@ class ObjectItem extends SettingsListItem {
 
 class ObjectList extends SettingsList {
   static ITEM_CONSTRUCTOR = ObjectItem;
+  update_selected_items() {
+    for (var i=0; i<this.objects.length; i++) {
+      if (this.project._object.objects && this.project._object.objects.includes(this.objects[i])) {
+        this.objects[i].html_element.classList.add("selected");
+      } else {
+        this.objects[i].html_element.classList.remove("selected");
+      }
+    }
+  }
 }
 
 class ObjectSettings extends DeferredSettingsGroup {

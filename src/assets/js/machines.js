@@ -177,14 +177,14 @@ class GCodeWriter extends PerforationWriter {
     var command = this.#gcode_commands_move[this._state] || command_default;
 
     var xa = x.toFixed(5)
-    var ya = y.toFixed(5)
+    var ya = -y.toFixed(5)
 
     var feedrate_default = this.#feedrates[PerforationWriter._STATE_DEFAULT];
     var feedrate = this.#feedrates[PerforationWriter._STATE_CUT] || feedrate_default;
 
     var line = command + " X" + xa + " Y" + ya + " F" + feedrate;
     this.writeln(line);
-    this._set_last_position(x, y);
+    this._set_last_position(x, -y);
   }
 
   arc(x, y, r, d) {
@@ -193,9 +193,9 @@ class GCodeWriter extends PerforationWriter {
     const command = commands[d] || commands_default[d] || "; ERROR: No valid command found for arc in direction \"" + d + "\" while in state \"" + this._state + "\" / G#";
 
     const xa = x.toFixed(5)
-    const ya = y.toFixed(5)
+    const ya = -y.toFixed(5)
 
-    const [cx, cy] = this._arc_center(x, y, r, d);
+    const [cx, cy] = this._arc_center(x, -y, r, d);
     const ia = (cx - this._lastX).toFixed(5);
     const ja = (cy - this._lastY).toFixed(5);
 
@@ -204,7 +204,7 @@ class GCodeWriter extends PerforationWriter {
 
     const line = command + " X" + xa + " Y" + ya + " I" + ia + " J" + ja + " R" + r + " F" + feedrate;
     this.writeln(line);
-    this._set_last_position(x, y);
+    this._set_last_position(x, -y);
   }
 }
 

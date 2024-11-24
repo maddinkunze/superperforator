@@ -1,17 +1,26 @@
-loadingScreen = {
+loading_screen = {
   _waiting: 1,
   _element: null,
+  _text_element: null,
   element: function() {
     if (!this._element) { this._element = document.getElementById("loading-container"); }
     return this._element;
   },
+  text_element: function() {
+    if (!this._text_element) { this._text_element = document.getElementById("loading-text"); }
+    return this._text_element;
+  },
   show: function() {
     if (this._waiting++) { return; }
+    this.set_text("");
     this.element().classList.remove("hidden");
   },
   hide: function() {
     if (--this._waiting) { return; }
     this.element().classList.add("hidden");
+  },
+  set_text: function(text) {
+    this.text_element().innerText = text;
   }
 };
 
@@ -95,10 +104,10 @@ class BaseProject extends SettingsObject {
   html_element = document.getElementById("settings-container");
 
   load_file(file) {
-    loadingScreen.show();
+    loading_screen.show();
     file.text()
       .then((function(_this) { return function(text) { _this.update_from_string(text); }; })(this))
-      .finally(function() { loadingScreen.hide(); });
+      .finally(function() { loading_screen.hide(); });
   }
 
   update_from_string(data_json) {
@@ -258,7 +267,7 @@ class DeferredSettingsGroup extends SettingsGroup {
       this.html_element.classList.remove("empty");
       this.open();
     }
-    this.update_constraints();
+    super.update_constraints();
     this._last_settings = this.to_json();
   }
   apply_changes_to_object() {
@@ -269,6 +278,10 @@ class DeferredSettingsGroup extends SettingsGroup {
       apply_json_diff(this.objects[i].settings, diff);
       this.objects[i].update_constraints();
     }
+  }
+  set_object(obj) {
+    this.objects = [obj];
+    this.update_shown_settings();
   }
   toggle_object(obj) {
     if (this.objects.includes(obj)) {
@@ -899,6 +912,11 @@ class Color extends SettingsLineContent {
   update_constraints() {
     this.value = this._color_element.value;
   }
+
+  clear() {
+    this._color_element.value = null;
+    this.update_constraints();
+  }
 }
 
 class FileUpload extends SettingsLine {
@@ -1144,16 +1162,16 @@ class ImageEl extends SettingsMultilineContent {
   }
 
   _on_image_file_selected(file) {
-    loadingScreen.show();
+    loading_screen.show();
     const _this = this;
     const reader = new FileReader();
     reader.onload = function() {
       _this.data = reader.result;
       _this.on_child_updated();
-      loadingScreen.hide();
+      loading_screen.hide();
     };
     reader.onerror = function() {
-      loadingScreen.hide();
+      loading_screen.hide();
     };
     reader.readAsDataURL(file);
   }
@@ -1283,7 +1301,6 @@ class ImageEl extends SettingsMultilineContent {
         resolve(img.naturalWidth/img.naturalHeight);
       }
       img.onerror = function() {
-        debugger;
         reject();
       }
       img.src = data;

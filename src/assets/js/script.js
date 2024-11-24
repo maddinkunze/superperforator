@@ -1,6 +1,6 @@
 window.addEventListener("load", function() {
   const project = new Project();
-  loadingScreen.hide();
+  loading_screen.hide();
   this.project = project;
 
   const canvas = ["preview-canvas-front", "preview-canvas-back"].map(function(e) { return document.getElementById(e); });
