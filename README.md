@@ -51,7 +51,7 @@ You can `git clone https://github.com/maddinkunze/superperforator` the repositor
 
 #### "Building"
 
-You can combine/"build" a single file by running the `combine.py` file within the `build` directory. A new file called `superperforator-vX.X.X.html` (the same as would be in the releases page) should appear in the `build` directory.
+You can combine ("build") a single file by running the `combine.py` file within the `build` directory. You will need a recent python3 install to do so. A new file called `superperforator-vX.X.X.html` (the same as would be in the releases page) should appear in the `build` directory.
 
 
 ## Attributions
