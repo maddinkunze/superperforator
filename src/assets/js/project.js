@@ -12,6 +12,9 @@ class Project extends BaseProject {
   output = new OutputSettings(this, "Output");
 
   static SETTINGS_MAP = ["project", "machine", "paper", "objects", "display", "output"];
+  static SETTINGS_COMPATIBILITY = {
+    "0.1.0": this.upgrade_010_to_011,
+  };
 
   canvas_render_back = document.getElementById("render-canvas-back");
   canvas_render_front = document.getElementById("render-canvas-front");
@@ -139,6 +142,17 @@ class Project extends BaseProject {
     context_back.restore();
     context_front.restore();
   }
+
+  upgrade_010_to_011(settings) {
+    settings.version = "0.1.1"
+    if (!settings.machine.hasOwnProperty("feedrate_travel")) {
+      settings.machine.feedrate_travel = {value: "500", unit: "mms"};
+    }
+    if (!settings.machine.hasOwnProperty("feedrate_cut")) {
+      settings.machine.feedrate_cut = {value: "200", unit: "mms"};
+    }
+    return settings;
+  }
 }
 
 
@@ -163,7 +177,7 @@ class MachineSettings extends SettingsGroup {
     this.feedrate_cut = new Speed(this, "Feedrate Cut", "200");
   }
 
-  static SETTINGS_MAP = ["type", "speed", "power"];
+  static SETTINGS_MAP = ["type", "speed", "power", "feedrate_travel", "feedrate_cut"];
 
   update_constraints() {
     if (this.type.value == "laser") {

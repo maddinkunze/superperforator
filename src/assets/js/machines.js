@@ -180,7 +180,7 @@ class GCodeWriter extends PerforationWriter {
     var ya = -y.toFixed(5)
 
     var feedrate_default = this.#feedrates[PerforationWriter._STATE_DEFAULT];
-    var feedrate = this.#feedrates[PerforationWriter._STATE_CUT] || feedrate_default;
+    var feedrate = this.#feedrates[this._state] || feedrate_default;
 
     var line = command + " X" + xa + " Y" + ya + " F" + feedrate;
     this.writeln(line);
@@ -200,9 +200,9 @@ class GCodeWriter extends PerforationWriter {
     const ja = (cy - this._lastY).toFixed(5);
 
     const feedrate_default = this.#feedrates[PerforationWriter._STATE_DEFAULT];
-    const feedrate = this.#feedrates[PerforationWriter._STATE_CUT] || feedrate_default;
+    const feedrate = this.#feedrates[this._state] || feedrate_default;
 
-    const line = command + " X" + xa + " Y" + ya + " I" + ia + " J" + ja + " R" + r + " F" + feedrate;
+    const line = command + " X" + xa + " Y" + ya + /*" I" + ia + " J" + ja + */" R" + r + " F" + feedrate;
     this.writeln(line);
     this._set_last_position(x, -y);
   }
