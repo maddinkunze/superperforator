@@ -6,7 +6,8 @@
 
 Superperforator is an easy-to-use tool that enables makers to create their own advent-calendar-cards with unique and personal images behind each door.
 
-![](docs/img/example_christmas_card.jpg)
+<p align="center"><img src="docs/img/example_christmas_card.jpg" width="80%"></p>
+<p align="center"><img src="docs/img/example_program.jpg" width="80%"></p>
 
 ## How to use
 
@@ -38,23 +39,47 @@ If you want to change the same setting for multiple items at once, select them f
 
 After adding the remaining 23 windows, you can preview your final calendar by expanding the display settings and hiding the cutouts. Finally you can export your calendar using the export settings. By default this will return a PDF file (.pdf) and a GCode file (.gcode or .nc).
 
-Now you are ready to print, cut and assemble your calendar. The first step is obvious: print the PDF file onto your thick paper. The print is double sided, if your printer does not support duplex, you have to turn the page manually to get a double sided print. After that, load your printed paper onto your cutter of choice, in my case a laser cutter based on a cheap 3018 mill. Load the GCode file into your cutter software, in my case [UGS (Universal GCode Sender)](https://github.com/winder/Universal-G-Code-Sender), and hit send. Please take care of your personal safety; close all designated enclosures, wear safety goggles, don't inhale the fumes, etc. If you do not have a machine to cut your card automatically, you can cut it by hand, although you need to bring a lot of time and patience to do so. Clean the card from any debris and residue left over from the cutting process. Next, fold your card in half while aligning both sides as good as possible. You may be able to peek through the newly cutted slots to fine adjust where the edges of the underlying images are. Now you are ready to glue both halves together. Unfold the card and apply some (paper-/wood-/craft-) glue to the cut side. Only apply it to the areas that are not windows, otherwise they cannot be opened afterwards and the card will not work; always leave a gap to the edges of the window and remove excess glue before closing the card back up. Now, and this is very important, put something flat and very heavy on top of the card so the paper does not curl or buckle. Leave it on the card for ~24 hours. Trust me, I have tried to shortcut this step by only letting it dry for 10 hours and I always regretted it.
+<p align="center"><img src="docs/img/process_steps.jpg" width="80%"></p>
+
+Now you are ready to print, cut and assemble your calendar. The first step is obvious: print the PDF file onto your thick paper. The print is double sided, if your printer does not support duplex, you have to turn the page manually to get a double sided print.
+
+<p align="center"><img src="docs/img/process_print_duplex.jpg" width="50%"></p>
+
+Step 2: After that, load your printed paper onto your cutter of choice, in my case a laser cutter based on a cheap 3018 mill. Load the GCode file into your cutter software, in my case [UGS (Universal GCode Sender)](https://github.com/winder/Universal-G-Code-Sender), and hit send. Please take care of your personal safety; close all designated enclosures, wear safety goggles, don't inhale the fumes, etc. If you do not have a machine to cut your card automatically, you can cut it by hand, although you need to bring a lot of time and patience to do so. Clean the card from any debris and residue left over from the cutting process. 
+
+Step 3: Next, fold your card in half while aligning both sides as good as possible. You may be able to peek through the newly cutted slots to fine adjust where the edges of the underlying images are. Now you are ready to glue both halves together. Unfold the card and apply some (paper-/wood-/craft-) glue to the cut side. Only apply it to the areas that are not windows, otherwise they cannot be opened afterwards and the card will not work; always leave a gap to the edges of the window and remove excess glue before closing the card back up. Now, and this is very important, put something flat and very heavy on top of the card so the paper does not curl or buckle. Leave it on the card for ~24 hours. Trust me, I have tried to shortcut this step by only letting it dry for 10 hours and I always regretted it.
+
+Step 4: Enjoy your finished calendar. You can gift it to friends and family so they can enjoy your personal experience during christmas :)
 
 
 #### Calibrating and testing different values
 
+[TODO]
+
 
 ### Options
 
+[TODO]
+
 #### Machine
+
+[TODO]
 
 #### Paper
 
+[TODO]
+
 #### Object
+
+[TODO]
 
 #### Display
 
+[TODO]
+
 #### Export
+
+[TODO]
 
 
 ## How to run
