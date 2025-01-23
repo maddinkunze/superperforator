@@ -41,7 +41,7 @@ After adding the remaining 23 windows, you can preview your final calendar by ex
 
 <p align="center"><img src="docs/img/process_steps.jpg" width="80%"></p>
 
-Now you are ready to print, cut and assemble your calendar. The first step is obvious: print the PDF file onto your thick paper. The print is double sided, if your printer does not support duplex, you have to turn the page manually to get a double sided print.
+Now you are ready to print, cut and assemble your calendar. The first step is obvious: print the PDF file onto your thick paper. The generated print file is designed to be double sided, so if your printer does not support duplex, you have to turn the page manually to get a double sided print.
 
 <p align="center"><img src="docs/img/process_print_duplex.jpg" width="50%"></p>
 
