@@ -143,7 +143,7 @@ class Project extends BaseProject {
     context_front.restore();
   }
 
-  upgrade_010_to_011(settings) {
+  static upgrade_010_to_011(settings) {
     settings.version = "0.1.1"
     if (!settings.machine.hasOwnProperty("feedrate_travel")) {
       settings.machine.feedrate_travel = {value: "500", unit: "mms"};
