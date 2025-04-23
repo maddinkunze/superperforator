@@ -31,7 +31,7 @@ You will need:
 
 See further down on how to start the superperforator application. As a quick start, you can use the hosted version [here](https://martinkunze.com/tools/superperforator).
 
-Expand the paper settings on the right side, enter your preferred page size (by default DIN A5 or 210×148mm), such that everything can be printed on one DIN A4 page and folded in the middle) and upload your background image. You can change how your image is fitted and positioned using the size, scale mode and position settings that should be visible now. Close the paper settings again.
+Expand the paper settings on the right side, enter your preferred page size (by default DIN A5 or 210×148mm, such that everything can be printed on one DIN A4 page and folded in the middle) and upload your background image. You can change how your image is fitted and positioned using the size, scale mode and position settings that should be visible now. Close the paper settings again.
 
 Add a window using the + button in the lower right corner. A new item should have appeared in your preview and the objects settings should have expanded. Click on the item in the objects list, the object settings should expand. Set the preferred shape and dimensions, you can then set the position. Unless you want to have precise control over the exact location of the window you only have to change the position setting. You might want to change the label (what is displayed on the window item) and the respective font. You can now add a image that will be visible after someone opened the window on their christmas calendar. As with the background, you can change the size, scale mode and position of the image relative to the enclosing shape.
 
