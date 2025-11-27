@@ -14,6 +14,7 @@ class Project extends BaseProject {
   static SETTINGS_MAP = ["project", "machine", "paper", "objects", "display", "output"];
   static SETTINGS_COMPATIBILITY = {
     "0.1.0": this.upgrade_010_to_011,
+    "0.1.1": this.upgrade_011_to_012,
   };
 
   canvas_render_back = document.getElementById("render-canvas-back");
@@ -151,6 +152,11 @@ class Project extends BaseProject {
     if (!settings.machine.hasOwnProperty("feedrate_cut")) {
       settings.machine.feedrate_cut = {value: "200", unit: "mms"};
     }
+    return settings;
+  }
+
+  static upgrade_011_to_012(settings) {
+    settings.version = "0.1.2"
     return settings;
   }
 }
