@@ -887,7 +887,7 @@ class SizeRel extends _Size {
     return this.constructor.to_mm(this.width, this.height, this.unit, ref);
   }
   static to_mm(width, height, unit, ref) {
-    return [width, height].map(function(l, i) { return LENGTH_UNITS_ABS[unit].to_mm(parseFloat(l), ref[i]); });
+    return [width, height].map(function(l, i) { return LENGTH_UNITS_REL[unit].to_mm(parseFloat(l), ref[i]); });
   }
 }
 
