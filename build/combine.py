@@ -10,9 +10,9 @@ re_style_in_html = re.compile(rb"""<link rel="stylesheet" href="([\w\-\/\.]+)">"
 re_script_in_html = re.compile(rb"""<script src="([\w\-\/\.]+)"></script>""")
 mime_types = {b"svg": b"image/svg+xml"}
 def resolve_dependencies_html(path, name, data):
-  data = re.sub(re_icon_in_html, lambda m: b"<link rel=\"icon\" href=\"data:"+mime_types[m[1].split(b".")[-1]]+b";base64,"+base64.b64encode(resolve_dependencies(os.path.join(path, m[1].decode())))+b"\">", data)
-  data = re.sub(re_style_in_html, lambda m: b"<style>" + resolve_dependencies(os.path.join(path, m[1].decode())) + b"</style>", data)
-  data = re.sub(re_script_in_html, lambda m: b"<script>" + resolve_dependencies(os.path.join(path, m[1].decode())) + b"</script>", data)
+  data = re.sub(re_icon_in_html, lambda m: b"<link rel=\"icon\" href=\"data:"+mime_types[m[1].split(b".")[-1]]+b";base64,"+base64.b64encode(resolve_dependencies(os.path.join(path, m[1].decode())))+b"\"><!-- file: " + m[1] + b" -->", data)
+  data = re.sub(re_style_in_html, lambda m: b"<style>" + b"/* file: " + m[1] + b" */" + resolve_dependencies(os.path.join(path, m[1].decode())) + b"</style>", data)
+  data = re.sub(re_script_in_html, lambda m: b"<script>" + b"/* file: " + m[1] + b" */" + resolve_dependencies(os.path.join(path, m[1].decode())) + b"</script>", data)
   return data
 
 re_url_in_css = re.compile(rb"""(?<=[:\s,])url\(['"]([\w\-\.\/]+)['"]\)\s+format\(['"](\w+)['"]\)""")
