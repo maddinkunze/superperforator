@@ -226,10 +226,10 @@ class Project extends BaseProject {
   static upgrade_012_to_013(settings) {
     settings.version = "0.1.3"
     if (!settings.output.hasOwnProperty("mode_image")) {
-      settings.output.mode_image = {value: "pdf_half"};
+      settings.output.mode_image = "pdf_half";
     }
     if (!settings.output.hasOwnProperty("mode_cutouts")) {
-      settings.output.mode_cutouts = {value: "gcode"};
+      settings.output.mode_cutouts = "gcode";
     }
     return settings;
   }
