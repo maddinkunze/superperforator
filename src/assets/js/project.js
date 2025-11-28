@@ -15,6 +15,7 @@ class Project extends BaseProject {
   static SETTINGS_COMPATIBILITY = {
     "0.1.0": this.upgrade_010_to_011,
     "0.1.1": this.upgrade_011_to_012,
+    "0.1.2": this.upgrade_012_to_013,
   };
 
   canvas_render_back = document.getElementById("render-canvas-back");
@@ -110,7 +111,7 @@ class Project extends BaseProject {
         console.warn("Project.export: unknown cutout export mode " + mode_cutouts);
         break;
     }
-    
+
     loading_screen.hide();
   }
 
@@ -219,6 +220,17 @@ class Project extends BaseProject {
 
   static upgrade_011_to_012(settings) {
     settings.version = "0.1.2"
+    return settings;
+  }
+
+  static upgrade_012_to_013(settings) {
+    settings.version = "0.1.3"
+    if (!settings.output.hasOwnProperty("mode_image")) {
+      settings.output.mode_image = {value: "pdf_half"};
+    }
+    if (!settings.output.hasOwnProperty("mode_cutouts")) {
+      settings.output.mode_cutouts = {value: "gcode"};
+    }
     return settings;
   }
 }
