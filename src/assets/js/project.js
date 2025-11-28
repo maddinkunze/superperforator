@@ -30,6 +30,9 @@ class Project extends BaseProject {
   async export() {
     loading_screen.show();
     loading_screen.set_text("Preparing...");
+    const name_prefix = this.project.name.value;
+    const mode_image = this.output.mode_image.value;
+    const mode_cutouts = this.output.mode_cutouts.value;
     const [width_mm, height_mm] = this.paper.calc_size();
     const ppmm = dpi_to_ppmm(parseFloat(this.output.quality.value))
     const width_px = Math.round(ppmm * width_mm);
@@ -39,16 +42,75 @@ class Project extends BaseProject {
     this.canvas_render_front.width = width_px;
     this.canvas_render_front.height = height_px;
 
+    if (mode_image == "jpg") { // ensure that canvases have white background when exporting to a format that does not support transparency (i.e. jpg)
+      this.canvas_render_back.save();
+      this.canvas_render_back.fillStyle = "#ffffff";
+      this.canvas_render_back.fillRect(0, 0, width_px, height_px);
+      this.canvas_render_back.restore();
+      this.canvas_render_front.save();
+      this.canvas_render_front.fillStyle = "#ffffff";
+      this.canvas_render_front.fillRect(0, 0, width_px, height_px);
+      this.canvas_render_front.restore();
+    }
+
     loading_screen.set_text("Drawing with high resolution...");
     await this.draw(false);
     
-    loading_screen.set_text("Exporting files...");
-    const pdf = new jspdf.jsPDF({unit: "mm", format: [width_mm, 2*height_mm]});
-    pdf.addImage(this.canvas_render_front.toDataURL("image/png"), "PNG", 0, 0, width_mm, height_mm, null, "FAST", 0);
-    pdf.addPage([width_mm, 2*height_mm]);
-    pdf.addImage(this.canvas_render_back.toDataURL("image/png"), "PNG", width_mm, 0, width_mm, height_mm, null, "FAST", 180);
-    pdf.save("print.pdf");
-    saveAs(new Blob([this.output_perforation_front]), "laser.gcode");
+    loading_screen.set_text("Exporting images...");
+    switch (mode_image) {
+      case "pdf_half":
+      case "pdf_full":
+      case "pdf_split":
+        const _height_mm = (mode_image == "pdf_half") ? 2*height_mm : height_mm;
+        const _pdf_orientation = (width_mm > _height_mm) ? "landscape" : "portrait";
+        var pdf = new jspdf.jsPDF({unit: "mm", format: [width_mm, _height_mm], orientation: _pdf_orientation});
+        pdf.addImage(this.canvas_render_front.toDataURL("image/png"), "PNG", 0, 0, width_mm, height_mm, null, "FAST", 0);
+        
+        if (mode_image == "pdf_split") {
+          pdf.save(name_prefix + "-print-front.pdf"); // save front image as separate pdf file
+          pdf = new jspdf.jsPDF({unit: "mm", format: [width_mm, _height_mm], orientation: _pdf_orientation}); // create new separate pdf for back image
+        } else {
+          pdf.addPage([width_mm, _height_mm]); // just add new page for back image
+        }
+
+        if (mode_image == "pdf_half") {
+          pdf.addImage(this.canvas_render_back.toDataURL("image/png"), "PNG", width_mm, 0, width_mm, height_mm, null, "FAST", 180);
+        } else {
+          pdf.addImage(this.canvas_render_back.toDataURL("image/png"), "PNG", 0, 0, width_mm, height_mm, null, "FAST", 0);
+        }
+
+        if (mode_image == "pdf_split") {
+          pdf.save(name_prefix + "-print-back.pdf"); // save back image as separate pdf file
+        } else {
+          pdf.save(name_prefix + "-print.pdf"); // save combined pdf file
+        }
+        break;
+      
+      case "png":
+        this.canvas_render_front.toBlob(function(blob) { saveAs(blob, name_prefix + "-print-front.png"); }, "image/png");
+        this.canvas_render_back.toBlob(function(blob) { saveAs(blob, name_prefix + "-print-back.png"); }, "image/png");
+        break;
+
+      case "jpg":
+        this.canvas_render_front.toBlob(function(blob) { saveAs(blob, name_prefix + "-print-front.jpg"); }, "image/jpeg");
+        this.canvas_render_back.toBlob(function(blob) { saveAs(blob, name_prefix + "-print-back.jpg"); }, "image/jpeg");
+        break;
+
+      default:
+        console.warn("Project.export: unknown image export mode " + mode_image);
+        break;
+    }
+
+    loading_screen.set_text("Exporting cutouts...");
+    switch (mode_cutouts) {
+      case "gcode":
+        saveAs(new Blob([this.output_perforation_front]), name_prefix + "-laser.gcode");
+        break;
+      default:
+        console.warn("Project.export: unknown cutout export mode " + mode_cutouts);
+        break;
+    }
+    
     loading_screen.hide();
   }
 
@@ -560,8 +622,10 @@ class DisplaySettings extends SettingsGroup {
 class OutputSettings extends SettingsGroup {
   init_children() {
     this.quality = new EntryWithUnit(this, "Print Quality", "72", {dpi: "dpi"});
+    this.mode_image = new Select(this, "Image Output", {pdf_half: "PDF (2 pages for duplex print)", pdf_full: "PDF (2 pages for separate print)", pdf_split: "PDF (2 files for separate print)", png: "PNG (2 image files)", jpg: "JPG (2 image files)"});
+    this.mode_cutouts = new Select(this, "Cutout Output", {gcode: "G-Code (for laser cutter)"}); // TODO: add svg and other options
     this._export = new PrimaryButton(this, "Export Project", (function(_this) { return function(_) { _this.project.export(); } })(this));
   }
 
-  static SETTINGS_MAP = ["quality"];
+  static SETTINGS_MAP = ["quality", "mode_image", "mode_cutouts"];
 }
