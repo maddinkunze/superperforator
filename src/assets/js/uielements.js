@@ -424,7 +424,8 @@ class _SettingsGroupItem extends SettingsObject {
   _add_file_input(filetypes) {
     const file_element = document.createElement("input");
     file_element.type = "file";
-    file_element.accept = filetypes.join(",");
+    const _actual_filetypes = filetypes.map(function(ft) { return "." + ft.split(".").pop(); })
+    file_element.accept = _actual_filetypes.join(",");
     return this.html_element.appendChild(file_element);
   }
 
